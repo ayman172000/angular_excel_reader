@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import * as XLSX from 'xlsx';
+import {HttpClient} from "@angular/common/http";
+import {FileDTO} from "./model/file";
 
 @Component({
   selector: 'app-root',
@@ -9,15 +11,37 @@ import * as XLSX from 'xlsx';
 export class AppComponent {
   title = 'excelReader2';
 
+
+  constructor(private http:HttpClient) {
+
+  }
+
   file: any;
   excelData: { sheetName: string, data: any[] }[] = [];
   headers: { [sheet: string]: string[] } = {};
   feuilles: string[] = [];
+  selectedFile!: File
+  /*
+  List<Map<String, Object>> excelData = new ArrayList<>();
+  Map<String, String[]> headers = new HashMap<>();
+  List<String> feuilles = new ArrayList<>();
+  */
   selectedFeuille!: string;
   onFileSelected(event: any) {
     this.file = event.target.files[0];
-    this.readExcelFile(this.file);
+    //this.readExcelFile(this.file);
+    this.selectedFile = event.target.files[0] as File;
+    const formData = new FormData();
+    formData.append('file', this.selectedFile, this.selectedFile.name);
+    this.http.post<FileDTO>('http://localhost:8083/calculChecksum', formData).subscribe(res => {
+      console.log("res from http")
+      console.log(res)
+      this.excelData=res.excelData
+      this.headers=res.headers
+      this.feuilles=res.feuilles
+    })
   }
+
 
   readExcelFile(file: any) {
     const reader = new FileReader();
