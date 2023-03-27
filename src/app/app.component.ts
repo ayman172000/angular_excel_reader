@@ -13,6 +13,7 @@ export class AppComponent {
   excelData: { sheetName: string, data: any[] }[] = [];
   headers: { [sheet: string]: string[] } = {};
   feuilles: string[] = [];
+  selectedFeuille!: string;
   onFileSelected(event: any) {
     this.file = event.target.files[0];
     this.readExcelFile(this.file);
@@ -41,4 +42,9 @@ export class AppComponent {
     }
   }
 
+  onSelect(value: any) {
+    //console.log("value")
+    //console.log(value.target.value)
+    this.selectedFeuille=value.target.value
+  }
 }

@@ -1,4 +1,5 @@
-<input type="file" (change)="onFileSelected($event)"><!--
+<input type="file" (change)="onFileSelected($event)">
+<!--
 <div *ngFor="let sheetName of feuilles; let index=index">
   <h3>{{sheetName}}</h3>
   <table>
@@ -13,6 +14,12 @@
 </div>
 {{excelData | json}}-->
 
+<!--div *ngIf="feuilles">
+  <select>
+    <option *ngFor="let feuille of feuilles" [value]="feuille">{{feuille}}</option>
+  </select>
+</div>
+
 <div *ngFor="let feuille of excelData">
   <h3>{{ feuille.sheetName }}</h3>
   <table>
@@ -21,12 +28,35 @@
       <th *ngFor="let header of headers[feuille.sheetName]">{{ header }}</th>
     </tr>
     </thead>
-    <!--{{feuille.data | json}}-->
   <tbody>
     <tr *ngFor="let row of feuille.data | keyvalue">
       <td *ngFor="let h of headers[feuille.sheetName] ">{{row.value[h]}}</td>
     </tr>
     </tbody>
   </table>
+</div>-->
+
+
+<div *ngIf="feuilles">
+  <select (change)="onSelect($event)">
+    <option *ngFor="let feuille of feuilles" [value]="feuille">{{feuille}}</option>
+  </select>
 </div>
+
+<div *ngFor="let feuille of excelData" [hidden]="selectedFeuille !== feuille.sheetName">
+  <h3>{{ feuille.sheetName }}</h3>
+  <table>
+    <thead>
+    <tr>
+      <th *ngFor="let header of headers[feuille.sheetName]">{{ header }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let row of feuille.data | keyvalue">
+      <td *ngFor="let h of headers[feuille.sheetName] ">{{row.value[h]}}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
 
